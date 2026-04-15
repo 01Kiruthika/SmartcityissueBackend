@@ -40,7 +40,7 @@ exports.loginUsers = async (req, res) => {
         if (!user) {
             return res.status(404).send({
                 status: false,
-                message: "User Not Found!!"
+                message: "User Not Found,Please Register First!!"
             });
         }
 
@@ -117,11 +117,11 @@ exports.deleteuser = async (req, res) => {
     }
 }
 
-exports.updateUser = async (req, res) => {
+exports.updateuser = async (req, res) => {
     try {
         let pro_id = req.params.pro_id
         let proObj = req.body
-    
+
         let updated = await User.findByIdAndUpdate(pro_id, proObj, {
             new: true
         })
@@ -152,37 +152,48 @@ exports.updateUser = async (req, res) => {
 
 
 // ADMIN
-
 exports.createAdmin = async (req, res) => {
     try {
+        let {
+            name,
+            phonenumber,
+            password
+        } = req.body;
 
-        let admin = await User.findOne({ role: "admin" });
-
-        if (admin) {
-            return res.send({
-                message: "Admin already exists"
-            });
-        }
-
-        let newAdmin = await User.create({
-            name: "admin",
-            phonenumber: "9999999999",
-            password: "admin",
+        let admin = await User.findOne({
             role: "admin"
         });
 
+        if (admin) {
+            return res.send({
+                message: "Admin already exists",
+                response: admin
+            });
+        }
+
+        // Create admin from req body
+        let newAdmin = await User.create({
+            name,
+            phonenumber,
+            password,
+            role: "admin" 
+        });
+
         return res.send({
+            status: true,
             message: "Admin created successfully",
             response: newAdmin
         });
 
     } catch (err) {
-        return res.status(500).send({
+        return res.status(400).send({
+            status: false,
             message: "Error",
             error: err.message
         });
     }
 };
+
 
 exports.getadmin = async (req, res) => {
     try {
@@ -203,4 +214,3 @@ exports.getadmin = async (req, res) => {
         });
     }
 };
-

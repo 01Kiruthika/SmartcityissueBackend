@@ -16,7 +16,7 @@ const {
     getManagers,
     updateManagers,
     deleteManagers
-} = require('../Controllers/manger.js')
+} = require('../Controllers/manager.js')
 
 
 // REGISTER

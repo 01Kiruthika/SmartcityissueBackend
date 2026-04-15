@@ -11,7 +11,7 @@ let RegisterSchema = new mongoose.Schema({
     phonenumber: {
         type: String,
         required: [true, "Phone Number cannot be Empty!!"],
-        unique: true,
+        unique: [true,"Phone Number should be unique"],
         min: [10, "Phone Number must be 10 digits"],
     },
 

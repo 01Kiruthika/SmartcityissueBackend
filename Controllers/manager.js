@@ -12,7 +12,7 @@ exports.createManager = async (req, res) => {
         if (existing) {
             return res.status(400).send({
                 status: false,
-                message: "User already exists"
+                message: "Manager already exists"
             });
         }
 
