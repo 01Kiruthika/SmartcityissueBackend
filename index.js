@@ -4,7 +4,7 @@ const mainrouter = require('./routes/authRoutes.js');
 const cors = require('cors')
 
 const cityapp = express();
-const port = 8010;
+const port = 8011;
 
 cityapp.use(express.json());
 

@@ -18,6 +18,16 @@ const {
     deleteManagers
 } = require('../Controllers/manager.js')
 
+const {
+    CreateComplaint,
+    getComplaints,
+    deleteComplaint,
+    updateComplaint
+} = require("../Controllers/Complaint.js")
+
+
+
+
 
 // REGISTER
 router.post("/user", registerUser);
@@ -38,6 +48,16 @@ router.post("/manager", createManager);
 router.get("/manager", getManagers);
 router.delete("/manager/:product_id", deleteManagers);
 router.put("/manager/:pro_id", updateManagers);
+
+
+// COMPLAINTS
+
+router.post("/complaint", CreateComplaint)
+router.get("/complaint", getComplaints)
+router.delete("/complaint/:complaint_id", deleteComplaint)
+router.put("/complaint/:comp_id",updateComplaint)
+
+
 
 
 module.exports = router;

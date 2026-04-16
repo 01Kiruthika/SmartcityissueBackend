@@ -1,28 +1,45 @@
 const mongoose = require('mongoose')
 
-new mongoose.Schema({
-    id: {
-        type: Number,
-        required: [true, "Id cannot be Empty!!"],
-        trim: true,
-        unique: true,
-    },
+const ComplaintSchema = new mongoose.Schema({
     user_id: {
-        type: Number,
-        required: [true, "User id cannot be Empty!!"],
-        unique: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Register", 
+        required: [true, "User id cannot be Empty!!"]
     },
-    Location: {
+
+    location: {
         type: String,
         required: [true, "Location cannot be Empty!!"],
     },
+
     proof: {
         type: String,
     },
-    status:{
+
+    status: {
         type: String,
+        enum: ["Pending", "InProgress", "Solved"],
+        default: "Pending"
+    },
+
+    manager_id: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Register",
+        default: null
+    },
+
+    completedProof: {
+        type: String,
+        default: null
+    },
+
+    complaintUpdated: {
+        type: String,
+        default: null
     }
 
 }, {
     timestamps: true
 })
+
+module.exports = mongoose.model("Complaint", ComplaintSchema)

@@ -9,11 +9,21 @@ exports.registerUser = async (req, res) => {
 
         let userres = await User.create(userreg);
 
-        return res.status(201).send({
-            status: true,
-            message: "User Registered Successfully!!",
-            response: userres
-        });
+        if (userres) {
+            return res.status(200).send({
+                status: true,
+                message: "User Registered Successfully!!",
+                response: userres
+            });
+        } else {
+            return res.status(400).send({
+                status: false,
+                message: "User not saved!!",
+                response: userres
+            })
+        }
+
+
 
     } catch (err) {
         return res.status(400).send({
@@ -73,10 +83,20 @@ exports.getuser = async (req, res) => {
             role: "citizen"
         });
 
-        return res.json({
-            message: "Citizens fetched successfully",
-            response: users
-        });
+        if (users) {
+            return res.json({
+                message: "Citizens Fetched successfully",
+                response: users
+            });
+        } else {
+            return res.status(400).send({
+                status: false,
+                message: "Citizens not Fetched!!",
+                response: users
+            })
+        }
+
+
 
     } catch (err) {
         return res.status(500).send({
@@ -176,14 +196,24 @@ exports.createAdmin = async (req, res) => {
             name,
             phonenumber,
             password,
-            role: "admin" 
+            role: "admin"
         });
 
-        return res.send({
-            status: true,
-            message: "Admin created successfully",
-            response: newAdmin
-        });
+        if (newAdmin) {
+            return res.send({
+                status: true,
+                message: "Admin created successfully",
+                response: newAdmin
+            });
+        } else {
+            return res.status(400).send({
+                status: false,
+                message: "Admin not Create!!",
+                response: newAdmin
+            })
+        }
+
+
 
     } catch (err) {
         return res.status(400).send({
@@ -200,14 +230,23 @@ exports.getadmin = async (req, res) => {
         let users = await User.find({
             role: "admin"
         });
-
-        return res.json({
+        if (users) {
+             return res.json({
             message: "Admin fetched successfully",
             response: users
         });
+        } else {
+            return res.status(400).send({
+                status: false,
+                message: "Admin not fetched !!",
+                response: users
+            })
+        }
+
+       
 
     } catch (err) {
-        return res.status(500).send({
+        return res.status(400).send({
             status: false,
             message: "Error",
             response: err.message
