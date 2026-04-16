@@ -112,3 +112,43 @@ exports.updateComplaint = async (req, res)=> {
     }
 
 }
+
+
+
+// MANAGER
+
+exports.updateByManager = async (req, res) => {
+    try {
+
+        let comp_id = req.params.comp_id;
+
+        let { status, completedProof } = req.body;
+
+        let updated = await ComplaintModel.findByIdAndUpdate(
+            comp_id,
+            {
+                status: status || "Solved",
+                completedProof: completedProof || null,
+                complaintUpdated: new Date()
+            },
+            { new: true }
+        );
+
+        if (updated) {
+            return res.json({
+                message: "Complaint Updated by Manager ",
+                response: updated
+            });
+        } else {
+            return res.status(400).send({
+                message: "Complaint Not Found"
+            });
+        }
+
+    } catch (err) {
+        return res.status(400).send({
+            message: "Error",
+            error: err.message
+        });
+    }
+};
