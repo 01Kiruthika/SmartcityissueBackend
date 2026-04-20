@@ -34,30 +34,28 @@ exports.registerUser = async (req, res) => {
     }
 
 }
-
 exports.loginUsers = async (req, res) => {
 
-    let {
+    const {
         phonenumber,
-        password
+        password,
+        role
     } = req.body;
 
+    console.log("Incoming:", req.body); 
+
     try {
-        let user = await User.findOne({
-            phonenumber
+
+        const user = await User.findOne({
+            phonenumber,
+            password,
+            role
         });
 
         if (!user) {
-            return res.status(404).send({
-                status: false,
-                message: "User Not Found,Please Register First!!"
-            });
-        }
-
-        if (user.password !== password) {
             return res.status(400).send({
                 status: false,
-                message: "Invalid Password!!"
+                message: "Invalid phone/password/role"
             });
         }
 
@@ -68,7 +66,7 @@ exports.loginUsers = async (req, res) => {
         });
 
     } catch (err) {
-        return res.status(500).send({
+        return res.status(400).send({
             status: false,
             message: "Error",
             response: err.message
@@ -231,10 +229,10 @@ exports.getadmin = async (req, res) => {
             role: "admin"
         });
         if (users) {
-             return res.json({
-            message: "Admin fetched successfully",
-            response: users
-        });
+            return res.json({
+                message: "Admin fetched successfully",
+                response: users
+            });
         } else {
             return res.status(400).send({
                 status: false,
@@ -243,7 +241,7 @@ exports.getadmin = async (req, res) => {
             })
         }
 
-       
+
 
     } catch (err) {
         return res.status(400).send({

@@ -3,10 +3,13 @@ const mongoose = require('mongoose')
 const ComplaintSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Register", 
+        ref: "Register",
         required: [true, "User id cannot be Empty!!"]
     },
-
+    title: {
+        type: String,
+        required: [true, "title cannot be Empty!!"]
+    },
     location: {
         type: String,
         required: [true, "Location cannot be Empty!!"],
@@ -23,7 +26,7 @@ const ComplaintSchema = new mongoose.Schema({
     },
 
     manager_id: {
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Register",
         default: null
     },
