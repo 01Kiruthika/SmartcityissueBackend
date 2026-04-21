@@ -8,7 +8,8 @@ const {
     deleteuser,
     updateuser,
     createAdmin,
-    getadmin
+    getadmin,
+    // assignManager
 } = require('../Controllers/user.js')
 
 const {
@@ -23,7 +24,8 @@ const {
     getComplaints,
     deleteComplaint,
     updateComplaint,
-    updateByManager
+    updateByManager,
+    assignManager
 } = require("../Controllers/Complaint.js")
 
 
@@ -43,6 +45,9 @@ router.post("/admin", createAdmin);
 router.get("/admin", getadmin);
 
 
+router.put("/assignmanager/:complaint_id", assignManager)
+
+
 
 // MANAGERS
 router.post("/manager", createManager);
@@ -60,7 +65,7 @@ router.put("/complaint/:comp_id", updateComplaint)
 
 
 // COMPLAINTS BY MANAGER
-router.put("/managerupdate/:compla_id", updateByManager)
+router.put("/managerupdate/:compl_id", updateByManager)
 
 
 

@@ -4,10 +4,17 @@ const User = require("../Models/RegisterModels");
 // MANAGER
 exports.createManager = async (req, res) => {
     try {
-        let { name, phonenumber, password } = req.body;
+        let {
+            name,
+            phonenumber,
+            password,
+            address
+        } = req.body;
 
         // check existing user
-        let existing = await User.findOne({ phonenumber });
+        let existing = await User.findOne({
+            phonenumber
+        });
 
         if (existing) {
             return res.status(400).send({
@@ -18,6 +25,7 @@ exports.createManager = async (req, res) => {
 
         let manager = await User.create({
             name,
+            address,
             phonenumber,
             password,
             role: "manager"
@@ -44,7 +52,9 @@ exports.createManager = async (req, res) => {
 exports.getManagers = async (req, res) => {
     try {
 
-        let managers = await User.find({ role: "manager" });
+        let managers = await User.find({
+            role: "manager"
+        });
 
         return res.status(200).send({
             status: true,
@@ -95,7 +105,7 @@ exports.updateManagers = async (req, res) => {
     try {
         let pro_id = req.params.pro_id
         let proObj = req.body
-    
+
         let updated = await User.findByIdAndUpdate(pro_id, proObj, {
             new: true
         })

@@ -42,7 +42,7 @@ exports.loginUsers = async (req, res) => {
         role
     } = req.body;
 
-    console.log("Incoming:", req.body); 
+    console.log("Incoming:", req.body);
 
     try {
 

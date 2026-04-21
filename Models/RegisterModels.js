@@ -11,7 +11,7 @@ let RegisterSchema = new mongoose.Schema({
     phonenumber: {
         type: String,
         required: [true, "Phone Number cannot be Empty!!"],
-        unique: [true,"Phone Number should be unique"],
+        unique: [true, "Phone Number should be unique"],
         min: [10, "Phone Number must be 10 digits"],
     },
 
@@ -20,7 +20,10 @@ let RegisterSchema = new mongoose.Schema({
         required: [true, "Password cannot be Empty!!"],
         min: [8, "Password must be at least 8 characters"],
     },
-
+    address: {
+        type: String,
+        required: [true, "Address cannot be Empty!!"],
+    },
     role: {
         type: String,
         enum: ["admin", "citizen", "manager"],

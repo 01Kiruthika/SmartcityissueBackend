@@ -30,6 +30,11 @@ const ComplaintSchema = new mongoose.Schema({
         ref: "Register",
         default: null
     },
+    manager_name: {
+        type: String,
+        ref:"Register",
+        default: null
+    },
 
     completedProof: {
         type: String,
