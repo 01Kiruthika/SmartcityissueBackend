@@ -24,6 +24,10 @@ let RegisterSchema = new mongoose.Schema({
         type: String,
         required: [true, "Address cannot be Empty!!"],
     },
+    email: {
+        type: String,
+        required: [true, "Email cannot be Empty!!"],
+    },
     role: {
         type: String,
         enum: ["admin", "citizen", "manager"],
