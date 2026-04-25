@@ -116,18 +116,20 @@ exports.updateComplaint = async (req, res) => {
 
 
 // MANAGER
-
 exports.updateByManager = async (req, res) => {
     try {
 
-        let comp_id = req.params.comp_id;
+        const comp_id = req.params.compl_id; // ✅ FIXED
 
-        let {
+        const {
             status,
             completedProof
         } = req.body;
 
-        let updated = await ComplaintModel.findByIdAndUpdate(
+        console.log("ID:", comp_id);
+        console.log("STATUS:", status);
+
+        const updated = await ComplaintModel.findByIdAndUpdate(
             comp_id, {
                 status: status || "Solved",
                 completedProof: completedProof || null,
@@ -139,22 +141,26 @@ exports.updateByManager = async (req, res) => {
 
         if (updated) {
             return res.json({
-                message: "Complaint Updated by Manager ",
+                status: true,
+                message: "Complaint Updated by Manager",
                 response: updated
             });
         } else {
             return res.status(400).send({
+                status: false,
                 message: "Complaint Not Found"
             });
         }
 
     } catch (err) {
-        return res.status(400).send({
+        return res.status(500).send({
+            status: false,
             message: "Error",
             error: err.message
         });
     }
 };
+
 
 
 exports.assignManager = async (req, res) => {
@@ -200,6 +206,30 @@ exports.assignManager = async (req, res) => {
         console.error(err);
         return res.status(500).send({
             message: "Error",
+            error: err.message
+        });
+    }
+};
+
+
+exports.getComplaintsByManager = async (req, res) => {
+    try {
+        const managerId = req.params.manager_id;
+
+        const complaints = await ComplaintModel.find({
+            manager_id: managerId
+        });
+
+        return res.json({
+            status: true,
+            message: "Manager complaints fetched successfully",
+            response: complaints
+        });
+
+    } catch (err) {
+        return res.status(500).send({
+            status: false,
+            message: "Error fetching complaints",
             error: err.message
         });
     }

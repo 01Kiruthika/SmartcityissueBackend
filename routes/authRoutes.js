@@ -25,7 +25,8 @@ const {
     deleteComplaint,
     updateComplaint,
     updateByManager,
-    assignManager
+    assignManager,
+    getComplaintsByManager
 } = require("../Controllers/Complaint.js")
 
 
@@ -66,6 +67,7 @@ router.put("/complaint/:comp_id", updateComplaint)
 
 // COMPLAINTS BY MANAGER
 router.put("/managerupdate/:compl_id", updateByManager)
+router.get("/getcomplaint/:manager_id", getComplaintsByManager);
 
 
 
