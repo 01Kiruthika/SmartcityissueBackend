@@ -126,8 +126,8 @@ exports.updateByManager = async (req, res) => {
             completedProof
         } = req.body;
 
-        console.log("ID:", comp_id);
-        console.log("STATUS:", status);
+        // console.log("ID:", comp_id);
+        // console.log("STATUS:", status);
 
         const updated = await ComplaintModel.findByIdAndUpdate(
             comp_id, {
@@ -171,13 +171,13 @@ exports.assignManager = async (req, res) => {
             manager_id
         } = req.body;
 
-        console.log("ID:", comp_id);
+        // console.log("ID:", comp_id);
 
-        console.log("PARAM:", comp_id);
-        console.log("BODY:", manager_id);
+        // console.log("PARAM:", comp_id);
+        // console.log("BODY:", manager_id);
 
         const check = await ComplaintModel.findById(comp_id);
-        console.log("CHECK FIND:", check);
+        // console.log("CHECK FIND:", check);
 
         if (!check) {
             return res.status(400).send({
@@ -187,8 +187,8 @@ exports.assignManager = async (req, res) => {
 
         let updated = await ComplaintModel.findByIdAndUpdate(
             comp_id, {
-                manager_id, // ✅ correct field
-                status: "InProgress", // ✅ must match ENUM
+                manager_id, 
+                status: "InProgress", 
                 complaintUpdated: new Date()
             }, {
                 new: true
