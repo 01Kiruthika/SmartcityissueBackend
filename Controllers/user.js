@@ -1,39 +1,40 @@
 const User = require("../Models/RegisterModels");
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 exports.registerUser = async (req, res) => {
     try {
+        console.log("Incoming Register Data:", req.body);
+
         let userreg = req.body;
 
-        // prevent admin creation
-        delete userreg.role;
+        if (!userreg.name || !userreg.phonenumber || !userreg.password) {
+            return res.status(400).send({
+                status: false,
+                message: "All fields required"
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(userreg.password, 10);
+        userreg.password = hashedPassword;
 
         let userres = await User.create(userreg);
 
-        if (userres) {
-            return res.status(200).send({
-                status: true,
-                message: "User Registered Successfully!!",
-                response: userres
-            });
-        } else {
-            return res.status(400).send({
-                status: false,
-                message: "User not saved!!",
-                response: userres
-            })
-        }
-
-
+        return res.status(200).send({
+            status: true,
+            message: "User Registered Successfully!!",
+            response: userres
+        });
 
     } catch (err) {
+        console.log("REGISTER ERROR:", err);
+
         return res.status(400).send({
             status: false,
-            message: "Error",
-            response: err.message
+            message: err.message
         });
     }
-
-}
+};
 exports.loginUsers = async (req, res) => {
 
     const {
@@ -48,21 +49,42 @@ exports.loginUsers = async (req, res) => {
 
         const user = await User.findOne({
             phonenumber,
-            password,
             role
         });
 
         if (!user) {
             return res.status(400).send({
                 status: false,
-                message: "Invalid phone/password/role"
+                message: "User Not found!!"
             });
         }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(400).send({
+                status: false,
+                message: "Invalid password"
+            });
+        }
+
+        //  Generate JWT Token
+        const token = jwt.sign({
+                userId: user._id,
+                role: user.role
+            },
+            process.env.JWT_SECRET, {
+                expiresIn: "1d"
+            }
+        );
 
         return res.status(200).send({
             status: true,
             message: "Login Successful!!",
-            response: user
+            token,
+            userId: user._id,
+            role: user.role,
+            name: user.name
         });
 
     } catch (err) {
@@ -140,6 +162,10 @@ exports.updateuser = async (req, res) => {
         let pro_id = req.params.pro_id
         let proObj = req.body
 
+        if (proObj.password) {
+            proObj.password = await bcrypt.hash(proObj.password, 10);
+        }
+
         let updated = await User.findByIdAndUpdate(pro_id, proObj, {
             new: true
         })
@@ -188,12 +214,13 @@ exports.createAdmin = async (req, res) => {
                 response: admin
             });
         }
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create admin from req body
         let newAdmin = await User.create({
             name,
-            phonenumber,
-            password,
+            phonenumber,    
+            password: hashedPassword,
             role: "admin"
         });
 

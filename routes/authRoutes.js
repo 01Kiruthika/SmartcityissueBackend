@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const verifyToken = require("../Middleware/authumiddleware.js");
 
 const {
     registerUser,
@@ -35,39 +36,39 @@ const {
 
 // REGISTER
 router.post("/user", registerUser);
+
+
 // LOGIN
 router.post("/userlogin", loginUsers)
-router.get("/users", getuser);
-router.delete("/user/:product_id", deleteuser);
-router.put("/user/:pro_id", updateuser);
+router.get("/users", verifyToken, getuser);
+router.delete("/user/:product_id", verifyToken, deleteuser);
+router.put("/user/:pro_id", verifyToken, updateuser);
 
 // ADMIN
-router.post("/admin", createAdmin);
-router.get("/admin", getadmin);
-
-
-router.put("/assignmanager/:complaint_id", assignManager)
+router.post("/admin",createAdmin);
+router.get("/admin", verifyToken, getadmin);
+router.put("/assignmanager/:complaint_id", verifyToken, assignManager)
 
 
 
 // MANAGERS
-router.post("/manager", createManager);
-router.get("/manager", getManagers);
-router.delete("/manager/:product_id", deleteManagers);
-router.put("/manager/:pro_id", updateManagers);
+router.post("/manager", verifyToken, createManager);
+router.get("/manager", verifyToken, getManagers);
+router.delete("/manager/:product_id", verifyToken, deleteManagers);
+router.put("/manager/:pro_id", verifyToken, updateManagers);
 
 
 // COMPLAINTS
 
-router.post("/complaint", CreateComplaint)
-router.get("/complaint", getComplaints)
-router.delete("/complaint/:complaint_id", deleteComplaint)
-router.put("/complaint/:comp_id", updateComplaint)
+router.post("/complaint", verifyToken, CreateComplaint)
+router.get("/complaint", verifyToken, getComplaints)
+router.delete("/complaint/:complaint_id", verifyToken, deleteComplaint)
+router.put("/complaint/:comp_id", verifyToken, updateComplaint)
 
 
 // COMPLAINTS BY MANAGER
-router.put("/managerupdate/:compl_id", updateByManager)
-router.get("/getcomplaint/:manager_id", getComplaintsByManager);
+router.put("/managerupdate/:compl_id",verifyToken,updateByManager)
+router.get("/getcomplaint/:manager_id",verifyToken, getComplaintsByManager);
 
 
 

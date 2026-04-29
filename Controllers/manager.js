@@ -1,9 +1,16 @@
 const User = require("../Models/RegisterModels");
+const bcrypt = require("bcrypt");
 
 
 // MANAGER
 exports.createManager = async (req, res) => {
     try {
+        if (req.user.role !== "admin") {
+            return res.status(400).send({
+                status: false,
+                message: "Access denied. Only admin can create manager"
+            });
+        }
         let {
             name,
             phonenumber,
@@ -22,12 +29,13 @@ exports.createManager = async (req, res) => {
                 message: "Manager already exists"
             });
         }
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         let manager = await User.create({
             name,
             address,
             phonenumber,
-            password,
+            password: hashedPassword,
             role: "manager"
         });
 
@@ -105,6 +113,10 @@ exports.updateManagers = async (req, res) => {
     try {
         let pro_id = req.params.pro_id
         let proObj = req.body
+
+        if (proObj.password) {
+            proObj.password = await bcrypt.hash(proObj.password, 10);
+        }
 
         let updated = await User.findByIdAndUpdate(pro_id, proObj, {
             new: true

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require('express');
 const dbconnect = require('./dbconfig/config.js');
 const mainrouter = require('./routes/authRoutes.js');
