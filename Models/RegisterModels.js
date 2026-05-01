@@ -33,6 +33,11 @@ let RegisterSchema = new mongoose.Schema({
         type: String,
         enum: ["admin", "citizen", "manager"],
         default: "citizen"
+    },
+    profile_image: {
+        type: String,
+        default: null
+
     }
 }, {
     timestamps: true
