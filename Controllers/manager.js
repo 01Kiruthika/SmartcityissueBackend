@@ -1,22 +1,31 @@
 const User = require("../Models/RegisterModels");
 const bcrypt = require("bcrypt");
 
-
-// MANAGER
+// CREATE MANAGER
 exports.createManager = async (req, res) => {
     try {
         if (req.user.role !== "admin") {
-            return res.status(400).send({
+            return res.status(403).send({
                 status: false,
                 message: "Access denied. Only admin can create manager"
             });
         }
+
         let {
             name,
             phonenumber,
             password,
+            email,
             address
         } = req.body;
+
+        // 🔴 VALIDATION (IMPORTANT)
+        if (!name || !phonenumber || !email || !password) {
+            return res.status(400).send({
+                status: false,
+                message: "All fields are required"
+            });
+        }
 
         // check existing user
         let existing = await User.findOne({
@@ -29,12 +38,15 @@ exports.createManager = async (req, res) => {
                 message: "Manager already exists"
             });
         }
+
+        // ✅ hash password safely
         const hashedPassword = await bcrypt.hash(password, 10);
 
         let manager = await User.create({
             name,
             address,
             phonenumber,
+            email,
             password: hashedPassword,
             role: "manager"
         });
@@ -46,14 +58,15 @@ exports.createManager = async (req, res) => {
         });
 
     } catch (err) {
+        console.error("Create Manager Error:", err); // 🔥 important log
+
         return res.status(500).send({
             status: false,
-            message: "Error",
+            message: "Server Error",
             response: err.message
         });
     }
 };
-
 
 
 //MANAGERS

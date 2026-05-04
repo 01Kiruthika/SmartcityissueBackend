@@ -29,29 +29,24 @@ exports.CreateComplaint = async (req, res) => {
     }
 }
 
-
 exports.getComplaints = async (req, res) => {
+    console.log("🔥 Complaint API HIT"); // ADD THIS
+
     try {
-        let getcomp = await ComplaintModel.find()
-        if (getcomp) {
-            return res.json({
-                message: "Complaint Data Fetched successfully!!!",
-                response: getcomp
-            })
-        } else {
-            return res.json({
-                message: "Sorry,Complaint Data Not Fetch"
-            })
-        }
+        let getcomp = await ComplaintModel.find();
+
+        return res.json({
+            message: "Complaint Data Fetched successfully!!!",
+            response: getcomp
+        });
+
     } catch (err) {
         return res.status(400).send({
-            status: false,
             message: "Error is occur!!",
             response: err
-        })
-
+        });
     }
-}
+};
 
 exports.deleteComplaint = async (req, res) => {
     try {
@@ -187,8 +182,8 @@ exports.assignManager = async (req, res) => {
 
         let updated = await ComplaintModel.findByIdAndUpdate(
             comp_id, {
-                manager_id, 
-                status: "InProgress", 
+                manager_id,
+                status: "InProgress",
                 complaintUpdated: new Date()
             }, {
                 new: true
