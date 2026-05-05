@@ -4,6 +4,11 @@ const express = require('express');
 const dbconnect = require('./dbconfig/config.js');
 const mainrouter = require('./routes/authRoutes.js');
 const cors = require('cors')
+const dns = require('dns')
+
+
+dns.setServers(["1.1.1.1","8.8.8.8"])
+
 
 const cityapp = express();
 const port = 8011;

@@ -30,7 +30,7 @@ exports.CreateComplaint = async (req, res) => {
 }
 
 exports.getComplaints = async (req, res) => {
-    console.log("🔥 Complaint API HIT"); // ADD THIS
+    console.log("Complaint API HIT"); // ADD THIS
 
     try {
         let getcomp = await ComplaintModel.find();

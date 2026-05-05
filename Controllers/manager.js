@@ -58,7 +58,7 @@ exports.createManager = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("Create Manager Error:", err); // 🔥 important log
+        console.error("Create Manager Error:", err); //  important log
 
         return res.status(500).send({
             status: false,
