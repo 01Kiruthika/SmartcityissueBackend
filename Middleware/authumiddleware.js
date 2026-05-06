@@ -4,33 +4,59 @@ const verifyToken = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
 
+        // No Authorization header
         if (!authHeader) {
             return res.status(401).json({
                 status: false,
+                code: "NO_TOKEN",
                 message: "No token provided"
             });
         }
 
-        // Split "Bearer TOKEN"
-        const token = authHeader.split(" ")[1];
+        // Expect format: "Bearer TOKEN"
+        const parts = authHeader.split(" ");
+
+        if (parts.length !== 2) {
+            return res.status(401).json({
+                status: false,
+                code: "INVALID_TOKEN_FORMAT",
+                message: "Token format is invalid"
+            });
+        }
+
+        const token = parts[1];
 
         if (!token) {
             return res.status(401).json({
                 status: false,
+                code: "TOKEN_MISSING",
                 message: "Token missing"
             });
         }
 
+        // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        req.user = decoded; // userId, role
+        // Attach user data to request
+        req.user = decoded;
 
         next();
 
     } catch (err) {
+        //  Handle expired token separately
+        if (err.name === "TokenExpiredError") {
+            return res.status(401).json({
+                status: false,
+                code: "TOKEN_EXPIRED",
+                message: "Token expired. Please login again."
+            });
+        }
+
+        // Invalid token (tampered or wrong secret)
         return res.status(401).json({
             status: false,
-            message: "Invalid or expired token"
+            code: "INVALID_TOKEN",
+            message: "Invalid token"
         });
     }
 };
