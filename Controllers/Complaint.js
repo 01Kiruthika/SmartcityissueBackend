@@ -114,7 +114,7 @@ exports.updateComplaint = async (req, res) => {
 exports.updateByManager = async (req, res) => {
     try {
 
-        const comp_id = req.params.compl_id; // ✅ FIXED
+        const comp_id = req.params.compl_id;
 
         const {
             status,
@@ -229,3 +229,17 @@ exports.getComplaintsByManager = async (req, res) => {
         });
     }
 };
+
+
+exports.getfiltercomplaints = async (req, res) => {
+    const userId = req.user.userId;
+
+    const complaints = await ComplaintModel.find({
+        user_id: userId
+    });
+
+    res.json({
+        status: true,
+        response: complaints
+    });
+}
