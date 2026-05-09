@@ -68,12 +68,13 @@ exports.createManager = async (req, res) => {
 
         } catch (emailError) {
 
-            console.log("EMAIL ERROR:", emailError);
+            console.log("FULL EMAIL ERROR:");
+            console.log(emailError);
 
             return res.status(500).send({
                 status: false,
                 message: "Email sending failed",
-                response: emailError.text || emailError.message
+                response: emailError
             });
         }
 
