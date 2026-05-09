@@ -2,12 +2,16 @@ const User = require("../Models/RegisterModels");
 const bcrypt = require("bcrypt");
 
 // CREATE MANAGER
+const bcrypt = require("bcrypt");
+const emailjs = require("@emailjs/nodejs");
+
 exports.createManager = async (req, res) => {
     try {
+
         if (req.user.role !== "admin") {
             return res.status(403).send({
                 status: false,
-                message: "Access denied. Only admin can create manager"
+                message: "Access denied"
             });
         }
 
@@ -19,6 +23,7 @@ exports.createManager = async (req, res) => {
             address
         } = req.body;
 
+        // CHECK REQUIRED
         if (!name || !phonenumber || !email || !password) {
             return res.status(400).send({
                 status: false,
@@ -26,7 +31,7 @@ exports.createManager = async (req, res) => {
             });
         }
 
-        // check existing user
+        // CHECK EXISTING
         let existing = await User.findOne({
             phonenumber
         });
@@ -38,8 +43,40 @@ exports.createManager = async (req, res) => {
             });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // =========================
+        // SEND EMAIL FIRST
+        // =========================
 
+        try {
+
+            await emailjs.send(
+                "service_909i4zn",
+                "template_t64qt6k", {
+                    name,
+                    email,
+                    password
+                }, {
+                    publicKey: "zqUfWoQbJx9clo0Qp",
+                    privateKey: "WyN3jt88uLBmbT2fAl_WV"
+                }
+            );
+
+        } catch (emailError) {
+
+            return res.status(500).send({
+                status: false,
+                message: "Email sending failed"
+            });
+        }
+
+        // =========================
+        // HASH PASSWORD AFTER EMAIL
+        // =========================
+
+        const hashedPassword =
+            await bcrypt.hash(password, 10);
+
+        // CREATE MANAGER
         let manager = await User.create({
             name,
             address,
@@ -56,12 +93,12 @@ exports.createManager = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("Create Manager Error:", err); 
+
+        console.error(err);
 
         return res.status(500).send({
             status: false,
-            message: "Server Error",
-            response: err.message
+            message: "Server Error"
         });
     }
 };
