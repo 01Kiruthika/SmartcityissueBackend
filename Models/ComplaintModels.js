@@ -1,22 +1,29 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const ComplaintSchema = new mongoose.Schema({
+
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Register",
         required: [true, "User id cannot be Empty!!"]
     },
+    user_name: {
+        type: String,
+        required: true
+    },
     title: {
         type: String,
-        required: [true, "title cannot be Empty!!"]
+        required: [true, "Title cannot be Empty!!"]
     },
+
     location: {
         type: String,
-        required: [true, "Location cannot be Empty!!"],
+        required: [true, "Location cannot be Empty!!"]
     },
 
     proof: {
         type: String,
+        default: null
     },
 
     status: {
@@ -24,7 +31,6 @@ const ComplaintSchema = new mongoose.Schema({
         enum: ["Pending", "InProgress", "Solved"],
         default: "Pending"
     },
-
     manager_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Register",
@@ -32,22 +38,22 @@ const ComplaintSchema = new mongoose.Schema({
     },
     manager_name: {
         type: String,
-        ref:"Register",
         default: null
     },
-
     completedProof: {
         type: String,
         default: null
     },
 
+
+
     complaintUpdated: {
-        type: String,
+        type: Date,
         default: null
     }
 
 }, {
     timestamps: true
-})
+});
 
-module.exports = mongoose.model("Complaint", ComplaintSchema)
+module.exports = mongoose.model("Complaint", ComplaintSchema);

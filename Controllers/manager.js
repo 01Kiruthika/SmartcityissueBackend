@@ -19,7 +19,6 @@ exports.createManager = async (req, res) => {
             address
         } = req.body;
 
-        // 🔴 VALIDATION (IMPORTANT)
         if (!name || !phonenumber || !email || !password) {
             return res.status(400).send({
                 status: false,
@@ -39,7 +38,6 @@ exports.createManager = async (req, res) => {
             });
         }
 
-        // ✅ hash password safely
         const hashedPassword = await bcrypt.hash(password, 10);
 
         let manager = await User.create({
@@ -58,7 +56,7 @@ exports.createManager = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("Create Manager Error:", err); //  important log
+        console.error("Create Manager Error:", err); 
 
         return res.status(500).send({
             status: false,

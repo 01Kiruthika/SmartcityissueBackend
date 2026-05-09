@@ -4,8 +4,6 @@ const jwt = require("jsonwebtoken")
 
 exports.registerUser = async (req, res) => {
     try {
-        console.log("Incoming Register Data:", req.body);
-
         let userreg = req.body;
 
         if (!userreg.name || !userreg.phonenumber || !userreg.password) {
@@ -34,7 +32,6 @@ exports.registerUser = async (req, res) => {
         });
 
     } catch (err) {
-        console.log("REGISTER ERROR:", err);
 
         return res.status(400).send({
             status: false,
@@ -49,8 +46,6 @@ exports.loginUsers = async (req, res) => {
         password,
         role
     } = req.body;
-
-    console.log("Incoming:", req.body);
 
     try {
 

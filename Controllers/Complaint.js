@@ -3,47 +3,107 @@ const ComplaintModel = require("../Models/ComplaintModels.js")
 exports.CreateComplaint = async (req, res) => {
 
     try {
-        console.log(req.body);
-        let complaintdetails = req.body
-        let complaint = await ComplaintModel.create(complaintdetails)
 
-        if (complaint) {
-            return res.json({
-                message: "Complaint Save successfully!!",
-                response: complaint
-            })
-        } else {
-            return res.json({
-                message: "Sorry,Complaint Not Save!!",
-                response: complaint.message
-            })
+        const {
+            user_id,
+            user_name,
+            title,
+            location,
+            proof,
+            status
+        } = req.body;
+
+
+
+
+        // VALIDATION
+        if (
+            !user_id ||
+            !user_name ||
+            !title ||
+            !location
+        ) {
+
+            return res.status(400).json({
+
+                status: false,
+
+                message: "All required fields must be filled"
+            });
         }
 
-    } catch (err) {
-        return res.status(400).send({
-            status: false,
-            message: "Error is occur!!!",
-            response: err
-        })
 
+
+
+        // CREATE
+        const complaint =
+            await ComplaintModel.create({
+
+                user_id,
+                user_name,
+                title,
+                location,
+                proof,
+                status
+            });
+
+
+
+
+        return res.status(201).json({
+
+            status: true,
+
+            message: "Complaint Saved Successfully",
+
+            response: complaint
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        return res.status(500).json({
+
+            status: false,
+
+            message: "Error occurred",
+
+            error: err.message
+        });
     }
-}
+};
 
 exports.getComplaints = async (req, res) => {
-    console.log("Complaint API HIT"); // ADD THIS
 
     try {
-        let getcomp = await ComplaintModel.find();
+
+        let getcomp = await ComplaintModel
+            .find()
+            .populate("user_id", "name phonenumber")
+            .lean();
+
 
         return res.json({
-            message: "Complaint Data Fetched successfully!!!",
+
+            status: true,
+
+            message: "Complaint Data Fetched Successfully",
+
             response: getcomp
         });
 
     } catch (err) {
-        return res.status(400).send({
-            message: "Error is occur!!",
-            response: err
+
+        console.error(err);
+
+        return res.status(500).send({
+
+            status: false,
+
+            message: "Error fetching complaints",
+
+            error: err.message
         });
     }
 };
@@ -121,8 +181,7 @@ exports.updateByManager = async (req, res) => {
             completedProof
         } = req.body;
 
-        // console.log("ID:", comp_id);
-        // console.log("STATUS:", status);
+
 
         const updated = await ComplaintModel.findByIdAndUpdate(
             comp_id, {
@@ -166,13 +225,7 @@ exports.assignManager = async (req, res) => {
             manager_id
         } = req.body;
 
-        // console.log("ID:", comp_id);
-
-        // console.log("PARAM:", comp_id);
-        // console.log("BODY:", manager_id);
-
         const check = await ComplaintModel.findById(comp_id);
-        // console.log("CHECK FIND:", check);
 
         if (!check) {
             return res.status(400).send({
@@ -189,8 +242,6 @@ exports.assignManager = async (req, res) => {
                 new: true
             }
         );
-
-        console.log("UPDATED:", updated);
 
         return res.json({
             message: "Manager Assigned Successfully",
