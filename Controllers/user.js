@@ -285,3 +285,39 @@ exports.getadmin = async (req, res) => {
         });
     }
 };
+
+
+exports.getProfile = async (req, res) => {
+
+    try {
+
+        const userId = req.user.userId;
+
+        const user = await User
+            .findById(userId)
+            .select("-password")
+            .lean();
+
+        if (!user) {
+
+            return res.status(404).json({
+                status: false,
+                message: "User not found"
+            });
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: "Profile fetched successfully",
+            response: user
+        });
+
+    } catch (err) {
+
+        return res.status(500).json({
+            status: false,
+            message: "Error fetching profile",
+            error: err.message
+        });
+    }
+};

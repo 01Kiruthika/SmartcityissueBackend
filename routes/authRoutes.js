@@ -11,6 +11,7 @@ const {
     createAdmin,
     getadmin,
     // assignManager
+    getProfile
 } = require('../Controllers/user.js')
 
 const {
@@ -33,7 +34,9 @@ const {
 
 
 
-const {getDashboardData} = require("../Controllers/DashboardController.js");
+const {
+    getDashboardData
+} = require("../Controllers/DashboardController.js");
 
 
 // REGISTER
@@ -45,9 +48,10 @@ router.post("/userlogin", loginUsers)
 router.get("/users", verifyToken, getuser);
 router.delete("/user/:product_id", verifyToken, deleteuser);
 router.put("/user/:pro_id", verifyToken, updateuser);
+router.get("/profile",verifyToken,getProfile);
 
 // ADMIN
-router.post("/admin",createAdmin);
+router.post("/admin", createAdmin);
 router.get("/admin", verifyToken, getadmin);
 router.put("/assignmanager/:complaint_id", verifyToken, assignManager)
 
@@ -66,15 +70,15 @@ router.post("/complaint", verifyToken, CreateComplaint)
 router.get("/complaint", verifyToken, getComplaints)
 router.delete("/complaint/:complaint_id", verifyToken, deleteComplaint)
 router.put("/complaint/:comp_id", verifyToken, updateComplaint)
-router.get("/mycomplaints", verifyToken,getfiltercomplaints)
+router.get("/mycomplaints", verifyToken, getfiltercomplaints)
 
 // COMPLAINTS BY MANAGER
-router.put("/managerupdate/:compl_id",verifyToken,updateByManager)
-router.get("/getcomplaint/:manager_id",verifyToken, getComplaintsByManager);
+router.put("/managerupdate/:compl_id", verifyToken, updateByManager)
+router.get("/getcomplaint/:manager_id", verifyToken, getComplaintsByManager);
 
 
 // DASHBOARD COUNTS
-router.get("/dashboard",verifyToken,getDashboardData);
+router.get("/dashboard", verifyToken, getDashboardData);
 
 
 
