@@ -1,8 +1,5 @@
 const User = require("../Models/RegisterModels");
 const bcrypt = require("bcrypt");
-
-// CREATE MANAGER
-const bcrypt = require("bcrypt");
 const emailjs = require("@emailjs/nodejs");
 
 exports.createManager = async (req, res) => {
