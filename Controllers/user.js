@@ -14,6 +14,13 @@ exports.registerUser = async (req, res) => {
                 message: "All fields required"
             });
         }
+        if (userreg.password.length < 8) {
+
+            return res.status(400).send({
+                status: false,
+                message: "Password must be at least 8 characters"
+            });
+        }
 
         const hashedPassword = await bcrypt.hash(userreg.password, 10);
         userreg.password = hashedPassword;
@@ -219,7 +226,7 @@ exports.createAdmin = async (req, res) => {
         // Create admin from req body
         let newAdmin = await User.create({
             name,
-            phonenumber,    
+            phonenumber,
             password: hashedPassword,
             role: "admin"
         });
