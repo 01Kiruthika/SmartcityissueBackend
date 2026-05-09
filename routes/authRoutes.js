@@ -33,6 +33,7 @@ const {
 
 
 
+const {DashboardController} = require("../Controllers/DashboardController.js");
 
 
 // REGISTER
@@ -70,6 +71,10 @@ router.get("/complaint/my", verifyToken,getfiltercomplaints)
 // COMPLAINTS BY MANAGER
 router.put("/managerupdate/:compl_id",verifyToken,updateByManager)
 router.get("/getcomplaint/:manager_id",verifyToken, getComplaintsByManager);
+
+
+// DASHBOARD COUNTS
+router.get("/dashboard",verifyToken,getDashboardData);
 
 
 
