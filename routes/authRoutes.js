@@ -66,7 +66,7 @@ router.post("/complaint", verifyToken, CreateComplaint)
 router.get("/complaint", verifyToken, getComplaints)
 router.delete("/complaint/:complaint_id", verifyToken, deleteComplaint)
 router.put("/complaint/:comp_id", verifyToken, updateComplaint)
-router.get("/complaint/my", verifyToken,getfiltercomplaints)
+router.get("/mycomplaints", verifyToken,getfiltercomplaints)
 
 // COMPLAINTS BY MANAGER
 router.put("/managerupdate/:compl_id",verifyToken,updateByManager)

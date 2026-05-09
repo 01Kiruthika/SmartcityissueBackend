@@ -230,16 +230,29 @@ exports.getComplaintsByManager = async (req, res) => {
     }
 };
 
-
 exports.getfiltercomplaints = async (req, res) => {
-    const userId = req.user.userId;
 
-    const complaints = await ComplaintModel.find({
-        user_id: userId
-    });
+    try {
 
-    res.json({
-        status: true,
-        response: complaints
-    });
-}
+        const userId = req.user.userId;
+
+        const complaints = await ComplaintModel
+            .find({
+                user_id: userId
+            })
+            .lean();
+
+        return res.json({
+            status: true,
+            response: complaints
+        });
+
+    } catch (err) {
+
+        return res.status(500).json({
+            status: false,
+            message: "Error fetching complaints",
+            error: err.message
+        });
+    }
+};
