@@ -33,7 +33,7 @@ const {
 
 
 
-const {DashboardController} = require("../Controllers/DashboardController.js");
+const {getDashboardData} = require("../Controllers/DashboardController.js");
 
 
 // REGISTER
