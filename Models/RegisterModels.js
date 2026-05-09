@@ -12,15 +12,14 @@ let RegisterSchema = new mongoose.Schema({
         type: String,
         required: [true, "Phone Number cannot be Empty!!"],
         unique: [true, "Phone Number should be unique"],
-        min: [10, "Phone Number must be 10 digits"],
+        minlength: [10, "Phone Number must be 10 digits"],
+        maxlength: [10, "Phone Number must be 10 digits"],
         match: [/^[986]\d{9}$/, "Phone number must start with 9, 8, or 6 and be 10 digits"],
     },
-
     password: {
         type: String,
         required: [true, "Password cannot be Empty!!"],
-        min: [8, "Password must be at least 8 characters"],
-
+        minlength: [8, "Password must be at least 8 characters"],
     },
     address: {
         type: String,
@@ -28,6 +27,10 @@ let RegisterSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+        unique: [true, "Email already exists"],
+        lowercase: true,
+        trim: true,
+        match: [ /^[^\s@]+@[^\s@]+\.[^\s@]+$/,"Enter a valid email address"]
     },
     role: {
         type: String,
