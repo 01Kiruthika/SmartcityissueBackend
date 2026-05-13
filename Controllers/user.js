@@ -6,19 +6,8 @@ exports.registerUser = async (req, res) => {
     try {
         let userreg = req.body;
 
-        if (!userreg.name || !userreg.phonenumber || !userreg.password) {
-            return res.status(400).send({
-                status: false,
-                message: "All fields required"
-            });
-        }
-        if (userreg.password.length < 8) {
 
-            return res.status(400).send({
-                status: false,
-                message: "Password must be at least 8 characters"
-            });
-        }
+        
 
         const hashedPassword = await bcrypt.hash(userreg.password, 10);
         userreg.password = hashedPassword;
