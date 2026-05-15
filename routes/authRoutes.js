@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const verifyToken = require("../Middleware/authumiddleware.js");
+const multer = require('multer')
 
 const {
     registerUser,
@@ -34,9 +35,17 @@ const {
 
 
 
+
 const {
     getDashboardData
 } = require("../Controllers/DashboardController.js");
+
+// MULTER SETUP
+const storage = multer.memoryStorage();
+
+const upload = multer({
+    storage: storage
+});
 
 
 // REGISTER
@@ -48,7 +57,7 @@ router.post("/userlogin", loginUsers)
 router.get("/users", verifyToken, getuser);
 router.delete("/user/:product_id", verifyToken, deleteuser);
 router.put("/user/:pro_id", verifyToken, updateuser);
-router.get("/profile",verifyToken,getProfile);
+router.get("/profile", verifyToken, getProfile);
 
 // ADMIN
 router.post("/admin", createAdmin);
@@ -66,10 +75,10 @@ router.put("/manager/:pro_id", verifyToken, updateManagers);
 
 // COMPLAINTS
 
-router.post("/complaint", verifyToken, CreateComplaint)
+router.post("/complaint", verifyToken, upload.single("proof"),CreateComplaint)
 router.get("/complaint", verifyToken, getComplaints)
 router.delete("/complaint/:complaint_id", verifyToken, deleteComplaint)
-router.put("/complaint/:comp_id", verifyToken, updateComplaint)
+router.put("/complaint/:comp_id", verifyToken, upload.single("proof"),updateComplaint)
 router.get("/mycomplaints", verifyToken, getfiltercomplaints)
 
 // COMPLAINTS BY MANAGER

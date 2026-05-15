@@ -9,11 +9,15 @@ exports.CreateComplaint = async (req, res) => {
             user_name,
             title,
             location,
-            proof,
             status
         } = req.body;
 
-
+        // IMAGE FILE
+        let proof = "";
+        if (req.file) {
+            proof =
+                `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+        }
 
 
         // VALIDATION
