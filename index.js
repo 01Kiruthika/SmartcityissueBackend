@@ -13,7 +13,6 @@ const cityapp = express();
 //  CORS
 cityapp.use(cors());
 
-//  Body parser
 cityapp.use(express.json({ limit: "10mb" }));
 cityapp.use(express.urlencoded({
     limit: "10mb",

@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const emailjs = require("@emailjs/nodejs");
 
 
-// CREATE MANAGER
 exports.createManager = async (req, res) => {
 
     try {
