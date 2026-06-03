@@ -75,7 +75,7 @@ router.put("/manager/:pro_id", verifyToken, updateManagers);
 
 // COMPLAINTS
 
-router.post("/complaint", verifyToken, upload.single("proof"),CreateComplaint)
+router.post("/complaint", verifyToken,CreateComplaint)
 router.get("/complaint", verifyToken, getComplaints)
 router.delete("/complaint/:complaint_id", verifyToken, deleteComplaint)
 router.put("/complaint/:comp_id", verifyToken, upload.single("proof"),updateComplaint)
