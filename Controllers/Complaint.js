@@ -1,82 +1,146 @@
 const ComplaintModel = require("../Models/ComplaintModels.js")
 
 exports.CreateComplaint = async (req, res) => {
+try {
 
-    try {
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
 
-        const {
-            user_id,
-            user_name,
-            title,
-            location,
-            status
-        } = req.body;
+    const {
+        user_id,
+        user_name,
+        title,
+        location,
+        status
+    } = req.body;
 
-        // IMAGE FILE
-        let proof = "";
-        if (req.file) {
-            proof =
-                `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
-        }
-
-
-        // VALIDATION
-        if (
-            !user_id ||
-            !user_name ||
-            !title ||
-            !location
-        ) {
-
-            return res.status(400).json({
-
-                status: false,
-
-                message: "All required fields must be filled"
-            });
-        }
-
-
-
-
-        // CREATE
-        const complaint =
-            await ComplaintModel.create({
-
-                user_id,
-                user_name,
-                title,
-                location,
-                proof,
-                status
-            });
-
-
-
-
-        return res.status(201).json({
-
-            status: true,
-
-            message: "Complaint Saved Successfully",
-
-            response: complaint
-        });
-
-    } catch (err) {
-
-        console.error(err);
-
-        return res.status(500).json({
-
+    // Validation
+    if (!user_id || !user_name || !title || !location) {
+        return res.status(400).json({
             status: false,
-
-            message: "Error occurred",
-
-            error: err.message
+            message: "All required fields must be filled"
         });
     }
+
+    // ObjectId Validation
+    if (!mongoose.Types.ObjectId.isValid(user_id)) {
+        return res.status(400).json({
+            status: false,
+            message: "Invalid user_id"
+        });
+    }
+
+    // Image Upload
+    let proof = null;
+
+    if (req.file) {
+        proof = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+    }
+
+    const complaint = await ComplaintModel.create({
+        user_id,
+        user_name,
+        title,
+        location,
+        proof,
+        status: status || "Pending"
+    });
+
+    return res.status(201).json({
+        status: true,
+        message: "Complaint Saved Successfully",
+        response: complaint
+    });
+
+} catch (err) {
+
+    console.error("Complaint Create Error:", err);
+
+    return res.status(500).json({
+        status: false,
+        message: err.message
+    });
+}
+
 };
+
+// exports.CreateComplaint = async (req, res) => {
+
+//     try {
+
+//         const {
+//             user_id,
+//             user_name,
+//             title,
+//             location,
+//             status
+//         } = req.body;
+
+//         // IMAGE FILE
+//         let proof = "";
+//         if (req.file) {
+//             proof =
+//                 `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+//         }
+
+
+//         // VALIDATION
+//         if (
+//             !user_id ||
+//             !user_name ||
+//             !title ||
+//             !location
+//         ) {
+
+//             return res.status(400).json({
+
+//                 status: false,
+
+//                 message: "All required fields must be filled"
+//             });
+//         }
+
+
+
+
+//         // CREATE
+//         const complaint =
+//             await ComplaintModel.create({
+
+//                 user_id,
+//                 user_name,
+//                 title,
+//                 location,
+//                 proof,
+//                 status
+//             });
+
+
+
+
+//         return res.status(201).json({
+
+//             status: true,
+
+//             message: "Complaint Saved Successfully",
+
+//             response: complaint
+//         });
+
+//     } catch (err) {
+
+//         console.error(err);
+
+//         return res.status(500).json({
+
+//             status: false,
+
+//             message: "Error occurred",
+
+//             error: err.message
+//         });
+//     }
+// };
 
 exports.getComplaints = async (req, res) => {
 
