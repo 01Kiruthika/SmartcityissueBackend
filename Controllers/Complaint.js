@@ -147,6 +147,8 @@ exports.updateComplaint = async (req, res) => {
 // MANAGER
 exports.updateByManager = async (req, res) => {
     try {
+        console.log("PARAMS:", req.params);
+        console.log("BODY:", req.body);
 
         const comp_id = req.params.compl_id;
 
@@ -155,40 +157,33 @@ exports.updateByManager = async (req, res) => {
             completedProof
         } = req.body;
 
-
-
         const updated = await ComplaintModel.findByIdAndUpdate(
             comp_id, {
-                status: status || "Solved",
-                completedProof: completedProof || null,
+                status,
+                completedProof,
                 complaintUpdated: new Date()
             }, {
                 new: true
             }
         );
 
-        if (updated) {
-            return res.json({
-                status: true,
-                message: "Complaint Updated by Manager",
-                response: updated
-            });
-        } else {
-            return res.status(400).send({
-                status: false,
-                message: "Complaint Not Found"
-            });
-        }
+        return res.json({
+            status: true,
+            message: "Complaint Updated by Manager",
+            response: updated
+        });
 
     } catch (err) {
-        return res.status(500).send({
+
+        console.log("UPDATE ERROR:");
+        console.log(err);
+
+        return res.status(400).json({
             status: false,
-            message: "Error",
             error: err.message
         });
     }
 };
-
 
 
 exports.assignManager = async (req, res) => {
