@@ -1,26 +1,20 @@
 const ComplaintModel = require("../Models/ComplaintModels.js")
+const mongoose = require("mongoose");
+
 exports.CreateComplaint = async (req, res) => {
     try {
 
-        console.log("===============");
-        console.log("BODY:", req.body);
-        console.log("FILE:", req.file);
+        console.log(req.body);
 
         const {
             user_id,
             user_name,
             title,
             location,
-            status
+            status,
+            proof
         } = req.body;
 
-
-        let proof = null;
-
-        if (req.file) {
-            proof =
-                `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
-        }
         const complaint = await ComplaintModel.create({
             user_id,
             user_name,
@@ -32,14 +26,13 @@ exports.CreateComplaint = async (req, res) => {
 
         return res.status(201).json({
             status: true,
+            message: "Complaint Created Successfully",
             response: complaint
         });
 
     } catch (err) {
 
-        console.log("ERROR START");
         console.log(err);
-        console.log("ERROR END");
 
         return res.status(500).json({
             status: false,
@@ -47,6 +40,7 @@ exports.CreateComplaint = async (req, res) => {
         });
     }
 };
+
 
 exports.getComplaints = async (req, res) => {
 
@@ -272,13 +266,14 @@ exports.getfiltercomplaints = async (req, res) => {
 
     try {
 
-        const userId = req.user.userId;
+        const userId = new mongoose.Types.ObjectId(req.user.userId);
 
-        const complaints = await ComplaintModel
-            .find({
-                user_id: userId
-            })
-            .lean();
+        const complaints = await ComplaintModel.find({
+            user_id: userId
+        }).lean();
+
+        console.log("User ID:", userId);
+        console.log("Complaints:", complaints);
 
         return res.json({
             status: true,
@@ -292,5 +287,6 @@ exports.getfiltercomplaints = async (req, res) => {
             message: "Error fetching complaints",
             error: err.message
         });
+
     }
 };
