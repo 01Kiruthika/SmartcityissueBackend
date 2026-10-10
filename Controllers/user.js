@@ -26,7 +26,6 @@ exports.registerUser = async (req, res) => {
     }
 };
 exports.loginUsers = async (req, res) => {
-
     const {
         phonenumber,
         password,
@@ -36,8 +35,8 @@ exports.loginUsers = async (req, res) => {
     try {
 
         const user = await User.findOne({
-            phonenumber,
-            role
+            phonenumber: phonenumber.trim(),
+            role: role.trim().toLowerCase()
         });
 
         if (!user) {
@@ -47,7 +46,10 @@ exports.loginUsers = async (req, res) => {
             });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(
+            password,
+            user.password
+        );
 
         if (!isMatch) {
             return res.status(400).send({
@@ -56,12 +58,13 @@ exports.loginUsers = async (req, res) => {
             });
         }
 
-        //  Generate JWT Token
-        const token = jwt.sign({
+        const token = jwt.sign(
+            {
                 userId: user._id,
                 role: user.role
             },
-            process.env.JWT_SECRET, {
+            process.env.JWT_SECRET,
+            {
                 expiresIn: "1d"
             }
         );
@@ -76,14 +79,16 @@ exports.loginUsers = async (req, res) => {
         });
 
     } catch (err) {
-        return res.status(400).send({
+
+        console.error("LOGIN ERROR:", err);
+
+        return res.status(500).send({
             status: false,
-            message: "Error",
+            message: "Server Error",
             response: err.message
         });
     }
 };
-
 
 exports.getuser = async (req, res) => {
     try {
